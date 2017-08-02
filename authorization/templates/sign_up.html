@@ -1,0 +1,19 @@
+{% extends "base_authorization.html" %}
+{% load static %}
+{% block content %}
+<div class="w3-content w3-padding-32">
+    <div class="w3-card">
+        <div class="w3-container w3-green">
+            <h2>SingUp</h2>
+        </div>
+        <form class="w3-container" method="post">{% csrf_token %}
+            <p>{{user_sign_up_form}}
+    			{{custom_user_form}}</p>
+            <p>
+            <button class="w3-button w3-green" type="submit" name="submit" value="submit">Submit</button></p>
+        </form>
+    </div>
+</div>
+
+
+{% endblock %}

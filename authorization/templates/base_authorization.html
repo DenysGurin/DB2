@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<title>DB2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="{% static 'main/libs/jquery-1.11.2.min.js' %}"></script>
+
+<body>
+<div class="w3-bar w3-green">
+    
+    <a href="/sign_up/" class="w3-bar-item w3-button w3-right">SignUp</a>
+    <a href="/sign_in/" class="w3-bar-item w3-button w3-right">SignIn</a>
+
+</div>
+
+{% block content %}
+{% endblock %}
+
+
+</body>
+</html>

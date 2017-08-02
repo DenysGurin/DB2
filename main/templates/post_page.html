@@ -1,0 +1,38 @@
+{% extends "base_main.html" %}
+{% load static %}
+{% block content %}
+
+<!-- {{post_pages_list}} -->
+
+<div class="w3-content w3-padding-32 posts">
+    <div class="w3-card-2" style="width:50vh;">
+            
+        <img src="{{post.image.url}}" style="width:50vh;">
+        <div class="w3-container">
+            <h5>{{post.title}}<span id="like_post_id_{{post.id}}" class="w3-right w3-button w3-padding-small like" post_id="{{post.id}}">{{post.likes.count}} like<i class="fa fa-heart" aria-hidden="true"></i></span></h5>
+        </div>
+        <div class="w3-container">
+            <p>{{post.body}}</p>
+        </div>
+        <div class="w3-container" id="comments_ajax">
+            {% include 'comments_ajax.html' %}
+            <hr>            
+        </div>
+
+        <div lass="w3-container" id="post_comments">
+            <form method="post">{% csrf_token %}
+                <div class="w3-padding">{{comment_form.comment}}<span class="w3-right"><button id="add_comment" post_id="{{post.id}}" class="w3-button w3-padding-small " type="submit" name="submit" value="comment">
+                    <i class="fa fa-paper-plane"></i> Comment
+                </button></span></div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- {{post_pags}} -->
+{% endblock %}
+

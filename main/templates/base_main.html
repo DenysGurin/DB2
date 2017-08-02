@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<title>DB2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<script src="{% static 'main/libs/jquery-1.11.2.min.js' %}"></script>
+<body>
+<div class="w3-bar w3-green">
+    
+    <a href="/" class="w3-bar-item w3-button">MAIN</a>
+    <a href="/sign_out/" class="w3-bar-item w3-button w3-right">LogOut</a>
+    
+</div>
+
+{% block content %}
+{% endblock %}
+
+
+</body>
+</html>
+<script type="text/javascript">
+    function goTo(url) {
+        location.href = url
+    }
+    
+    $(document).ready(function () {
+        $(".posts").on("click", ".like", function() {
+            var url = "/";
+            var post_id = $(this).attr("post_id");
+            var update = "#like_post_id_" + post_id;
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                },
+                success: function(data) {
+                    $(update).html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+    $(document).ready(function () {
+        $("#comments_ajax").on("click", "#more", function() {
+            var post_id = $(this).attr("post_id");
+            var url = "/post_page/" + post_id + "/";
+            var num = $(this).attr("num");
+            $.ajax({
+                type: 'POST',
+                async: true,
+                url: url,
+                data: {
+                    'num': num,
+                    'post_id': post_id,
+                    'csrfmiddlewaretoken': '{{csrf_token}}'
+                },
+                success: function(data) {
+                    $('#comments_ajax').html(data);
+                },
+                datatype: 'json',
+            });
+        });
+    });
+    
+    // $(document).ready(function () {
+    //     $("#post_comments").on("click", "#add_comment", function() {
+    //         var post_id = $(this).attr("post_id");
+    //         var url = "/post_page/" + post_id + "/";
+    //         // var update = "#like_post_id_" + post_id;
+    //         $.ajax({
+    //             type: 'POST',
+    //             async: true,
+    //             url: url,
+    //             data: {
+    //                'csrfmiddlewaretoken': '{{csrf_token}}',
+    //                'flag': 'add_comment',
+    //                'post_id': post_id,
+    //             },
+    //             success: function(data) {
+    //                 $("#comments_ajax").html(data);
+    //             },
+    //             datatype: 'json',
+    //         });
+    //     });
+    // });
+    
+    
+</script>

@@ -1,0 +1,10 @@
+{% if comments.count > 0 %}
+    {% for comment in comments.all %}
+        <p>{{comment.user}} <span class="w3-small">{{comment.comment}}</span></p>
+    {% endfor %}
+    {% if more %}
+    <div class="w3-padding-16 w3-center">
+        <button class="w3-button w3-animate-zoom" id="more" post_id="{{post.id}}" num="{{comments.count}}">more<i class="w3-xxxlarge fa fa-chevron-down" aria-hidden="true"></i></button>
+    </div>
+    {% endif %}
+{% endif %}
