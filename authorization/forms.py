@@ -35,7 +35,7 @@ class CustomUserForm(forms.ModelForm):
 
     def sendEmail(self, data):
         # link="http://http://127.0.0.1:8000/activate/"+data['activation_key']
-        link="https://tranquil-anchorage-13051.herokuapp.com/activate/"+datas['activation_key']
+        link="https://tranquil-anchorage-13051.herokuapp.com/activate/"+data['activation_key']
         user = User.objects.get(id=data["user"])
         
         message="to activate account go to link %s"%link
