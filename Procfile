@@ -1,1 +1,1 @@
-web: gunicorn DB2.wsgi
+web: gunicorn DB2.wsgi --log-file -
