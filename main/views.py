@@ -4,6 +4,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, Http404
 from .models import Post, Like, Comment
+from authorization.models import CustomUser
 from .forms import SearchForm, CommentForm
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q
@@ -35,9 +36,13 @@ class PostActions(object):
     def likePost(request):
 
         post_id = int(request.POST['post_id'])
-        user = request.user
+        user = CustomUser.objects.get(user=request.user)
         post = Post.objects.get(id=post_id)
-        
+        print(
+            post_id,
+            user,
+            post,
+        )
         try:
             like = post.likes.get(user=user)
             print(like)
@@ -60,7 +65,7 @@ class PostActions(object):
         if comment_form.is_valid():
             
             comment_data = comment_form.cleaned_data
-            comment_data["user"] = request.user
+            comment_data["user"] = CustomUser.objects.get(user=request.user)
             
             comment = Comment.objects.create(**comment_data)
             
@@ -151,7 +156,7 @@ class Main(LoginRequiredView):
             return redirect("/search/%s/"%search_data["search"].replace(",","+").replace(" ",""))
 
         if request.is_ajax():
-            
+            print("is_ajax")
             post = PostActions.likePost(request)
 
             return HttpResponse("%s like"%post.likes.count())

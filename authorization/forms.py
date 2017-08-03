@@ -15,12 +15,31 @@ class CustomUserForm(forms.ModelForm):
     
     class Meta:
         model = CustomUser
-        exclude = ['user', 'activation_key', 'key_expires']
+        exclude = [
+            'user', 
+            'activation_key', 
+            'key_expires'
+        ]
 
         widgets={
-            "birthday": forms.DateInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
-            "country": forms.TextInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
-            "city": forms.TextInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
+            "birthday": forms.DateInput(
+                attrs={
+                    'placeholder': "required*", 
+                    'class': 'w3-input w3-border',
+                }
+            ),
+            "country": forms.TextInput(
+                attrs={
+                    'placeholder': "required*", 
+                    'class': 'w3-input w3-border',
+                }
+            ),
+            "city": forms.TextInput(
+                attrs={
+                    'placeholder': "required*", 
+                    'class': 'w3-input w3-border',
+                }
+            ),
         }
 
     def save(self, data):
@@ -34,33 +53,60 @@ class CustomUserForm(forms.ModelForm):
         return custom_user
 
     def sendEmail(self, data):
-        # link="http://http://127.0.0.1:8000/activate/"+data['activation_key']
-        link="https://tranquil-anchorage-13051.herokuapp.com/activate/"+data['activation_key']
+        # link="http://http://127.0.0.1:8000/activate/%s"%data['activation_key']
+        link="https://tranquil-anchorage-13051.herokuapp.com/activate/%s"%data['activation_key']
         user = User.objects.get(id=data["user"])
         
         message="to activate account go to link %s"%link
         
-        send_mail("Activation user", message, settings.EMAIL_HOST_USER, [user.email,], fail_silently=False)
+        send_mail(
+            "Activation user", 
+            message, 
+            settings.EMAIL_HOST_USER, 
+            [user.email,], 
+            fail_silently=False
+        )
 
 class UserSignUpForm(forms.ModelForm):
 
     confirm = forms.CharField(
+        required=True,
         widget=forms.PasswordInput(
             attrs={
-                'placeholder': "", 
+                'placeholder': "required*", 
                 'class': 'w3-input w3-border'
-                }
-            )
+            }
         )
+    )
 
     class Meta:
         model = User
-        fields = ('username', 'email', 'password', 'confirm')
+        fields = (
+            'username',
+            'email', 
+            'password', 
+            'confirm'
+        )
 
         widgets={
-            "username": forms.TextInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
-            "email": forms.EmailInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
-            "password": forms.PasswordInput(attrs={'placeholder': "", 'class': 'w3-input w3-border'}),
+            "username": forms.TextInput(
+                attrs={
+                    'placeholder': "required*",
+                    'class': 'w3-input w3-border',
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    'placeholder': "required*",
+                    'class': 'w3-input w3-border'
+                }
+            ),
+            "password": forms.PasswordInput(
+                attrs={
+                    'placeholder': "required*",
+                    'class': 'w3-input w3-border'
+                }
+            ),
         }
         help_texts = {
             'email': None,
@@ -75,9 +121,19 @@ class UserSignUpForm(forms.ModelForm):
         if not valid:
             return valid
 
-        if self.cleaned_data['password'] != self.cleaned_data['confirm']:
+        if self.cleaned_data.get('password') != self.cleaned_data.get('confirm'):
             return False
 
+        email = self.cleaned_data.get('email')
+
+        try:
+            User.objects.get(email=email)
+
+            return False
+
+        except User.DoesNotExist:
+            pass
+        
         return valid
 
     def save(self, data):

@@ -25,7 +25,7 @@ class SignIn(View):
         if request.POST.get("submit"):
 
             user_sign_in_form = UserSignInForm(data=request.POST)
-            
+            # print(user_sign_in_form.is_valid())
             if user_sign_in_form.is_valid():
 
                 user_data = user_sign_in_form.cleaned_data
@@ -75,7 +75,8 @@ class SignUp(View):
                 custom_user_form.sendEmail(custom_user_data)
                 custom_user = custom_user_form.save(custom_user_data)
                 print("this is custom user: %s"%custom_user)
-                # request.session['registered']=True #For display purposes
+            else:
+                return redirect("/sign_up/")
         return redirect("/")
 
 
@@ -120,15 +121,13 @@ class SignOut(View):
 
 
 def activation(request, key):
-    print(CustomUser.objects.all().count())
-    for u in CustomUser.objects.all():
-        print(u.activation_key)
+ 
     custom_user = get_object_or_404(CustomUser, activation_key=key)
     if custom_user.user.is_active == False:
         if timezone.now() > custom_user.key_expires:
             
             id_user = custom_user.user.id
-        else: #Activation successful
+        else: 
             custom_user.user.is_active = True
             custom_user.user.save()
 
